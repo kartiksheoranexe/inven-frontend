@@ -1,0 +1,49 @@
+name: inven
+description: A new Flutter project.
+
+publish_to: 'none'
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  http: ^0.13.4
+  shared_preferences: ^2.0.12
+  flutter_easyloading: ^3.0.5
+  flutter_typeahead: ^4.3.7
+  file_picker: ^5.2.6
+  permission_handler: ^10.2.0
+  android_intent_plus: ^3.1.7
+  intl: ^0.17.0
+  pie_chart: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+  flutter_lints: ^2.0.0
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/invenicon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/invenicon.png
+    - assets/icons/invenicon.png
+
+
+
+
