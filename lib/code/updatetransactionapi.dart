@@ -4,7 +4,7 @@ import 'config.dart';
 import 'package:http/http.dart' as http;
 
 Future<http.Response> updateTransactionStatus({
-  required String transactionId,
+  required List<String> transactionIds,
   required String identifier,
 }) async {
   final url = Uri.parse('http://${AppConfig.host}:${AppConfig.port}/inventory/update-transaction-status/');
@@ -16,7 +16,7 @@ Future<http.Response> updateTransactionStatus({
   };
 
   final body = jsonEncode({
-    'transaction_id': transactionId,
+    'transaction_ids': transactionIds,
     'identifier': identifier,
   });
 

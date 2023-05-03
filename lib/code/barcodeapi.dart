@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 Future<http.Response> generateQrCode(
     {
-      required int quantityDelta,
       required double price
     }
     ) async {
@@ -19,7 +18,6 @@ Future<http.Response> generateQrCode(
   };
 
   final body = jsonEncode({
-    "quantity_delta": quantityDelta,
     "price": price
   });
 

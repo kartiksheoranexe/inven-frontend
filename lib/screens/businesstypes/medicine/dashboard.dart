@@ -14,7 +14,9 @@ import 'package:inven/code/updateqtyapi.dart';
 import 'package:inven/code/barcodeapi.dart';
 import 'package:inven/models/inventorymodel.dart';
 
+import '../../../code/cartapi.dart';
 import 'barcode.dart';
+import 'checkout.dart';
 
 class DashboardWidget extends StatefulWidget {
   final String businessName;
@@ -459,7 +461,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
             if (response.statusCode == 200) {
               Map<String, dynamic> responseBody = jsonDecode(response.body);
-              String? transactionId = responseBody['transaction_id'];
+              int? itemId = responseBody['item_id'];
 
               if (_selectedButton == "+") {
                 showDialog(
@@ -475,27 +477,52 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                 );
               }
               else {
-                if (transactionId != null) {
-                  final qrResponse = await generateQrCode(
-                    quantityDelta : responseBody['quantity_delta'],
-                    price: (responseBody['total_price'] ?? 0.0).toDouble(),
-                  );
+                if (itemId != null) {
+                  void _addItemToCart(int itemId, int quantity) async {
+                    try {
+                      Map<String, dynamic> response = await addItemToCart(itemId: itemId, quantity: quantity);
+                      print('Response: $response');
 
-                  if (qrResponse.statusCode == 200) {
-                    Uint8List barCodeUint8List = Uint8List.fromList(
-                        qrResponse.bodyBytes);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            BarCodeWidget(barCodePng: barCodeUint8List,
-                              bname: widget.businessName,
-                              tid: transactionId
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Item added to checkout'),
+                          content: Text('Add more items?'),
+                          actions: [
+                            MyButton(
+                              text: 'Go to Checkout',
+                              onPressed: () {
+                                // Close the dialog
+                                Navigator.of(context).pop();
+
+                                // Navigate to CheckoutWidget
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CheckoutWidget(bname: widget.businessName)),
+                                );
+                              },
                             ),
-                      ),
-                    );
+                            MyButton(
+                              text: 'Add More Items',
+                              onPressed: () {
+                                // Stay on dashboard and refresh it
+                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => DashboardWidget(businessName: widget.businessName)),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (e) {
+                      print('Error: $e');
+                    }
                   }
-                }else {
+                  _addItemToCart(itemId, quantityDelta.abs());
+                }
+                else {
                   showDialog(
                     context: context,
                     builder: (context) => MyAlertDialog(

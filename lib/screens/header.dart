@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'businesstypes/medicine/checkout.dart';// Import the CheckoutWidget here
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -7,6 +8,17 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.shopping_cart),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CheckoutWidget(bname: title,),
+            ),
+          );
+        },
+      ),
       automaticallyImplyLeading: false,
       centerTitle: true,
       title: Column(

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import '../../../code/deletecartitemapi.dart';
 import 'dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:inven/screens/button.dart';
@@ -8,15 +9,27 @@ import 'package:inven/code/updatetransactionapi.dart';
 class BarCodeWidget extends StatefulWidget {
   final Uint8List? barCodePng;
   final String bname;
-  final String tid;
+  final List<String> tids;
+  final List<int> cids;
 
-  BarCodeWidget({required this.barCodePng, required this.bname, required this.tid});
+  BarCodeWidget({required this.barCodePng, required this.bname, required this.tids, required this.cids});
 
   @override
   _BarCodeWidgetState createState() => _BarCodeWidgetState();
 }
 
 class _BarCodeWidgetState extends State<BarCodeWidget> {
+
+  Future<void> deleteAllCartItems() async {
+    for (int cartItemId in widget.cids) {
+      try {
+        await deleteCartItem(cartItemId);
+      } catch (e) {
+        print('Error deleting cart item: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +46,9 @@ class _BarCodeWidgetState extends State<BarCodeWidget> {
                   : CircularProgressIndicator(),
               SizedBox(height: 8),
               Center(
-                child: Text(
-                    'Transaction ID: ${widget.tid}'
-                ),
+                // child: Text(
+                //     'Transaction ID: ${widget.tid}'
+                // ),
               ),
               SizedBox(height: 16),
               SizedBox(
@@ -44,7 +57,8 @@ class _BarCodeWidgetState extends State<BarCodeWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyButton(
                     onPressed: () async {
-                      await updateTransactionStatus(transactionId: widget.tid, identifier: 'Y');
+                      await updateTransactionStatus(transactionIds: widget.tids, identifier: 'Y');
+                      await deleteAllCartItems();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -64,7 +78,7 @@ class _BarCodeWidgetState extends State<BarCodeWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: MyButton(
                     onPressed: () async {
-                      await updateTransactionStatus(transactionId: widget.tid, identifier: 'N');
+                      await updateTransactionStatus(transactionIds: widget.tids, identifier: 'N');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
