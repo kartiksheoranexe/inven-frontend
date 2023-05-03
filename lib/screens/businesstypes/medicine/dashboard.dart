@@ -489,30 +489,36 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           title: Text('Item added to checkout'),
                           content: Text('Add more items?'),
                           actions: [
-                            MyButton(
-                              text: 'Go to Checkout',
-                              onPressed: () {
-                                // Close the dialog
-                                Navigator.of(context).pop();
+                            Row(
+                              children: [
+                                MyButton(
+                                  text: 'Checkout',
+                                  onPressed: () {
+                                    // Close the dialog
+                                    Navigator.of(context).pop();
 
-                                // Navigate to CheckoutWidget
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => CheckoutWidget(bname: widget.businessName)),
-                                );
-                              },
+                                    // Navigate to CheckoutWidget
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => CheckoutWidget(bname: widget.businessName)),
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 5,),
+                                MyButton(
+                                  text: 'Add More Items',
+                                  onPressed: () {
+                                    // Stay on dashboard and refresh it
+                                    Navigator.of(context).pop(); // Close the dialog
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => DashboardWidget(businessName: widget.businessName)),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                            MyButton(
-                              text: 'Add More Items',
-                              onPressed: () {
-                                // Stay on dashboard and refresh it
-                                Navigator.of(context).pop(); // Close the dialog
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => DashboardWidget(businessName: widget.businessName)),
-                                );
-                              },
-                            ),
+
                           ],
                         ),
                       );
