@@ -6,6 +6,8 @@ import 'package:inven/screens/listofbusiness.dart';
 import 'package:inven/code/loginapi.dart';
 import 'package:inven/code/getbusinessapi.dart';
 
+import 'forgetpass.dart';
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -95,10 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => ForgotPasswordWidget()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgetPasswordWidget()),
+                      );
                     },
                     child: Text(
                       'Forgot Password?',
