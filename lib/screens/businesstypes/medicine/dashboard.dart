@@ -11,11 +11,8 @@ import 'package:inven/screens/header.dart';
 import 'package:inven/screens/mydiologbox.dart';
 import 'package:inven/code/inventoryapi.dart';
 import 'package:inven/code/updateqtyapi.dart';
-import 'package:inven/code/barcodeapi.dart';
 import 'package:inven/models/inventorymodel.dart';
-
 import '../../../code/cartapi.dart';
-import 'barcode.dart';
 import 'checkout.dart';
 
 class DashboardWidget extends StatefulWidget {
@@ -68,7 +65,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     return resultMap;
   }
 
-
   Future<List<Item>> _searchMedicineName(String query) async {
     List<Item> searchResults =  await InventoryApi.searchItems(
       businessName: widget.businessName,
@@ -77,6 +73,34 @@ class _DashboardWidgetState extends State<DashboardWidget> {
       itemName: query,
     );
 
+    // Check if query is a number
+    final isNumeric = int.tryParse(query);
+    if (isNumeric != null) {
+      // If it is, set the dropdowns to the first item's values
+      Item item = searchResults.first;
+      String additionalInfoString = item.additionalInfo.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+
+      setState(() {
+        _selectedMedicine = item.itemName;
+        _selectedUnit = item.unitOfMeasurement;
+        _selectedSize = item.size;
+        _selectedDistributor = item.distributorName;
+        _selectedCategory = item.category;
+        _selectedAdditionalInfo = additionalInfoString;
+      });
+
+      // Clear the dropdown lists
+      _medicineUnits.clear();
+      _medicineSizes.clear();
+      _distributors.clear();
+      _categories.clear();
+      // Add the item's values to the dropdown lists
+      _medicineUnits.add(item.unitOfMeasurement);
+      _medicineSizes.add(item.size);
+      _distributors.add(item.distributorName);
+      _categories.add(item.category);
+    }
+
     Set<String> uniqueNames = searchResults.map((item) => item.itemName).toSet();
     List<Item> distinctMedicines = uniqueNames.map((name) {
       return searchResults.firstWhere((item) => item.itemName == name);
@@ -84,6 +108,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
     return distinctMedicines.take(4).toList();
   }
+
+
 
 
   Future<void> _getMedSizesAndUnits(String medicineName) async {
@@ -248,8 +274,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
       },
     );
   }
-
-
 
   void _onTabTapped(int index) {
     setState(() {
@@ -458,7 +482,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   ? parseAdditionalInfo(_selectedAdditionalInfo!)
                   : {},
             );
-
+            print(response.body);
             if (response.statusCode == 200) {
               Map<String, dynamic> responseBody = jsonDecode(response.body);
               int? itemId = responseBody['item_id'];

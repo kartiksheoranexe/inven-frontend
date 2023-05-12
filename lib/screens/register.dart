@@ -102,20 +102,24 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     key: _formKey,
     child: Column(
     children: [
-    TextFormField(
-    controller: _usernameController,
-    decoration: InputDecoration(
-    labelText: 'Username',
-    border: OutlineInputBorder(),
-    ),
-    validator: (value) {
-    if (value!.isEmpty) {
-    return 'Username cannot be empty';
-    }
-    return null;
-    },
-    ),
-    SizedBox(height: 10),
+      TextFormField(
+        controller: _usernameController,
+        decoration: InputDecoration(
+          labelText: 'Username',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Username cannot be empty';
+          } else if (value.contains(' ')) {
+            return 'Username cannot contain spaces';
+          }
+          return null;
+        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+      ),
+
+      SizedBox(height: 10),
     TextFormField(
     controller: _emailController,
     decoration: InputDecoration(
@@ -128,6 +132,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     }
     return null;
     },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     ),
     SizedBox(height: 10),
     TextFormField(
@@ -143,6 +148,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     }
     return null;
     },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     ),
     SizedBox(height: 10),
     TextFormField(
@@ -158,6 +164,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     }
     return null;
     },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
     ),
     SizedBox(height: 10),
     GestureDetector(
@@ -222,6 +229,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           }
           return null;
         },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
       SizedBox(height: 20),
       MyButton(

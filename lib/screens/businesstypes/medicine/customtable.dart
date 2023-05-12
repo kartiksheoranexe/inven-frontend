@@ -126,6 +126,8 @@ class CustomTable extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text('Item ID: ${item.id}'),
+                                SizedBox(height: 8),
                                 Text('Item Type: ${item.itemType}'),
                                 SizedBox(height: 8),
                                 Text('Price: ${item.price}'),

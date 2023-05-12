@@ -9,7 +9,7 @@ class InventoryApi {
     required String businessName,
     required String category,
     required String distributorName,
-    required String itemName,
+    required dynamic itemName,
   }) async {
     final url = Uri.parse('http://${AppConfig.host}:${AppConfig.port}/inventory/search-items/');
 
@@ -27,6 +27,7 @@ class InventoryApi {
     };
     print(queryParams);
     final response = await http.get(url.replace(queryParameters: queryParams), headers: headers);
+    print(response.body);
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body) as List<dynamic>;
       final items = jsonData.map((json) => Item.fromJson(json)).toList();
