@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:inven/screens/widgetbackground.dart';
+
 import '../../../code/deletecartitemapi.dart';
 import 'dashboard.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,7 @@ class _BarCodeWidgetState extends State<BarCodeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(

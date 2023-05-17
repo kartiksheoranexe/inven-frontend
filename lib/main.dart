@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/welcometoinven.dart';
+import 'screens/widgetbackground.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Inven',
-      home: Scaffold(
+      home: GradientScaffold(
         appBar: null,
         body: WelcomeWidget(),
         bottomNavigationBar: null,

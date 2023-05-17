@@ -4,6 +4,7 @@ import 'package:inven/screens/button.dart';
 import 'package:inven/screens/mydiologbox.dart';
 import 'package:inven/code/addsupplier.dart';
 import 'package:inven/code/delsupplier.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class SupplierEditWidget extends StatefulWidget {
   final List<String> businessNames;
@@ -35,7 +36,7 @@ class _SupplierEditWidgetState extends State<SupplierEditWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Padding(

@@ -3,6 +3,7 @@ import 'package:inven/screens/businesstypes/medicine/salesdetails.dart';
 import 'package:inven/screens/businesstypes/medicine/topten.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/button.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 import '../../../code/salesapi.dart';
@@ -41,9 +42,8 @@ class _SalesPerformanceWidgetState extends State<SalesPerformanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
+    return GradientScaffold(
+      body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -158,23 +158,23 @@ class _SalesPerformanceWidgetState extends State<SalesPerformanceWidget> {
         ),
           ],
       ),
-    ),
-    SizedBox(height: 10),
-    FutureBuilder<SalesPerformance>(
-    future: salesPerformanceFuture,
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return CircularProgressIndicator();
-    } else if (snapshot.hasError) {
-    return Text('Error: ${snapshot.error}');
-    } else if (snapshot.hasData) {
-    SalesPerformance salesPerformance = snapshot.data!;
-    totalRevenue = salesPerformance.totalRevenue;
-    totalCogs = salesPerformance.totalCogs;
-    totalProfitLoss = salesPerformance.totalProfitLoss;
-    totalProfitLossPercentage = salesPerformance.totalProfitLossPercentage;
+      ),
+      SizedBox(height: 10),
+      FutureBuilder<SalesPerformance>(
+      future: salesPerformanceFuture,
+      builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+      SalesPerformance salesPerformance = snapshot.data!;
+      totalRevenue = salesPerformance.totalRevenue;
+      totalCogs = salesPerformance.totalCogs;
+      totalProfitLoss = salesPerformance.totalProfitLoss;
+      totalProfitLossPercentage = salesPerformance.totalProfitLossPercentage;
 
-    return CustomCard(
+      return CustomCard(
       child: Column(
         children: [
           PieChart(
@@ -192,12 +192,12 @@ class _SalesPerformanceWidgetState extends State<SalesPerformanceWidget> {
           ),
         ],
       ),
-    );
-    } else {
+      );
+      } else {
       return Text('No data available');
-    }
-    },
-    ),
+      }
+      },
+      ),
             ],
           ),
         ),

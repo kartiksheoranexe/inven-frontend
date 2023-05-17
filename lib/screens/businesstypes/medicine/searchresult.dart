@@ -4,6 +4,7 @@ import 'package:inven/screens/footer.dart';
 import 'package:inven/screens/header.dart';
 import 'package:inven/screens/businesstypes/medicine/customtable.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class SearchResultWidget extends StatefulWidget {
   final String businessName;
@@ -25,7 +26,7 @@ class _SearchResultWidgetState extends State<SearchResultWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: Header(title: widget.businessName),
       body: Center(
         child: Container(

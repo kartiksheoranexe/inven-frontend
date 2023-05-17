@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/welcome.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'confirmbusiness.dart';
 import 'package:inven/code/loginapi.dart';
 import 'package:inven/code/registerbusinessapi.dart';
@@ -28,8 +29,8 @@ class _RegisterBusinessWidgetState extends State<RegisterBusinessWidget> {
         onTap: () {
       FocusScope.of(context).unfocus();
     },
-    child: Scaffold(
-    backgroundColor: Colors.white,
+    child: GradientScaffold(
+    // backgroundColor: Colors.white,
     body: SafeArea(
     child: Stack(
     children: [

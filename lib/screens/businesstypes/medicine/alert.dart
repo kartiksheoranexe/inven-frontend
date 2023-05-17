@@ -3,6 +3,7 @@ import 'package:inven/models/alertmodel.dart';
 import 'package:inven/screens/footer.dart';
 import 'package:inven/screens/header.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'alerttable.dart';
 
 class AlertWidget extends StatefulWidget {
@@ -25,7 +26,7 @@ class _AlertWidgetState extends State<AlertWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: Header(title: widget.businessName),
       body: Center(
         child: Container(

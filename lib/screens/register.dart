@@ -4,6 +4,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/welcome.dart';
 import 'package:inven/screens/mydiologbox.dart';
 import 'package:inven/code/registerapi.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 
 class RegisterWidget extends StatefulWidget {
@@ -20,12 +21,17 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   TextEditingController _phoneNumberController = TextEditingController();
   DateTime? _selectedDate;
   String _selectedGender = 'Male';
+  bool _isLoading = false;
 
   void _handleRegistration() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+    // await Future.delayed(Duration(seconds: 5));
     String dob = '${_selectedDate!.year}-${_selectedDate!.month}-${_selectedDate!.day}';
     bool success = await registerUser(
       username: _usernameController.text,
@@ -38,33 +44,37 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
     if (success) {
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return MyAlertDialog(
-                title: 'Registration Successful',
-                content: 'Registered Successfully',
-                buttonText: 'OK',
-              onButtonPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
-              },
-            );
-          },
+        context: context,
+        builder: (BuildContext context) {
+          return MyAlertDialog(
+            title: 'Registration Successful',
+            content: 'Registered Successfully',
+            buttonText: 'OK',
+            onButtonPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+            },
+          );
+        },
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed. Please try again.')),
       );
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
+    return GradientScaffold(
+      // resizeToAvoidBottomInset: true,
       body: SafeArea(
       child: Stack(
       children: [
@@ -232,7 +242,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
       SizedBox(height: 20),
-      MyButton(
+      _isLoading
+          ? const CircularProgressIndicator()
+          : MyButton(
         text: 'REGISTER',
         onPressed: () {
           _handleRegistration();

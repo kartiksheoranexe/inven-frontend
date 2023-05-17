@@ -6,6 +6,7 @@ import 'package:inven/code/registerbusinessapi.dart';
 import 'package:inven/code/loginapi.dart';
 
 import 'package:inven/screens/listofbusiness.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class ConfirmWidget extends StatelessWidget {
   final String businessName;
@@ -30,7 +31,7 @@ class ConfirmWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
         body: SingleChildScrollView(
         child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),

@@ -5,6 +5,8 @@ import 'package:inven/screens/registerbusiness.dart';
 import 'package:inven/models/businessmodel.dart';
 import 'package:inven/code/businessdetailapi.dart';
 
+import '../../widgetbackground.dart';
+
 class BusinessDetailsWidget extends StatefulWidget {
 
 
@@ -32,14 +34,14 @@ class _BusinessDetailsWidgetState extends State<BusinessDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTile(context, 'REGISTER NEW BUSINESS',
-                  Colors.blueGrey, () {
+                  Colors.blueGrey.shade800, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -48,7 +50,7 @@ class _BusinessDetailsWidgetState extends State<BusinessDetailsWidget> {
                     ),
                   );
                 },),
-              _buildTile(context, 'SEE BUSINESS DETAILS', Colors.blueGrey, () {
+              _buildTile(context, 'SEE BUSINESS DETAILS', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/header.dart';
@@ -143,7 +144,7 @@ class _InventoryWidgetState extends State<InventoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: Header(title: widget.businessName),
       body: Center(
         child: Container(

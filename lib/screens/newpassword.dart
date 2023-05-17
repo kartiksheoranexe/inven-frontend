@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/welcome.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 import '../code/newpasswordapi.dart';
 import 'button.dart';
@@ -15,14 +16,53 @@ class NewPasswordWidget extends StatefulWidget {
   @override
   _NewPasswordWidgetState createState() => _NewPasswordWidgetState();
 }
+
 class _NewPasswordWidgetState extends State<NewPasswordWidget> {
   final _formKey = GlobalKey<FormState>();
   String _newPassword = '';
   String _confirmPassword = '';
+  bool _isLoading = false;
+
+  void _handlePasswordReset() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final response = await resetPassword(
+        email: widget.email,
+        otp: widget.otp,
+        newPassword: _newPassword,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (context) => MyAlertDialog(
+            title: 'Password reset successful',
+            content: 'Password has been changed successfully!',
+            buttonText: 'LOGIN',
+            onButtonPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+                    (Route<dynamic> route) => false,
+              );
+            },
+          ),
+        );
+      } else {
+        // Handle error cases
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Padding(
@@ -57,39 +97,12 @@ class _NewPasswordWidgetState extends State<NewPasswordWidget> {
                     onChanged: (value) => _confirmPassword = value,
                   ),
                   SizedBox(height: 24),
-                  MyButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final response = await resetPassword(
-                          email: widget.email,
-                          otp: widget.otp,
-                          newPassword: _newPassword,
-                        );
-
-                        if (response.statusCode == 200) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => MyAlertDialog(
-                              title: 'Password reset successful',
-                              content: 'Password has been changed successfully!',
-                              buttonText: 'LOGIN',
-                              onButtonPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                                      (Route<dynamic> route) => false,
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          // Handle error cases
-                        }
-                      }
-                    },
-                    text: 'Proceed',
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : MyButton(
+                    onPressed: _handlePasswordReset,
+                    text: 'PROCEED',
                   ),
-
                 ],
               ),
             ),

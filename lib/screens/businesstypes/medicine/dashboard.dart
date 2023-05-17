@@ -13,6 +13,7 @@ import 'package:inven/code/inventoryapi.dart';
 import 'package:inven/code/updateqtyapi.dart';
 import 'package:inven/models/inventorymodel.dart';
 import '../../../code/cartapi.dart';
+import '../../widgetbackground.dart';
 import 'checkout.dart';
 
 class DashboardWidget extends StatefulWidget {
@@ -65,6 +66,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     return resultMap;
   }
 
+  bool isNumeric(String s) {
+    if(s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
   Future<List<Item>> _searchMedicineName(String query) async {
     List<Item> searchResults =  await InventoryApi.searchItems(
       businessName: widget.businessName,
@@ -73,34 +81,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
       itemName: query,
     );
 
-    // Check if query is a number
-    final isNumeric = int.tryParse(query);
-    if (isNumeric != null) {
-      // If it is, set the dropdowns to the first item's values
-      Item item = searchResults.first;
-      String additionalInfoString = item.additionalInfo.entries.map((e) => '${e.key}: ${e.value}').join(', ');
-
-      setState(() {
-        _selectedMedicine = item.itemName;
-        _selectedUnit = item.unitOfMeasurement;
-        _selectedSize = item.size;
-        _selectedDistributor = item.distributorName;
-        _selectedCategory = item.category;
-        _selectedAdditionalInfo = additionalInfoString;
-      });
-
-      // Clear the dropdown lists
-      _medicineUnits.clear();
-      _medicineSizes.clear();
-      _distributors.clear();
-      _categories.clear();
-      // Add the item's values to the dropdown lists
-      _medicineUnits.add(item.unitOfMeasurement);
-      _medicineSizes.add(item.size);
-      _distributors.add(item.distributorName);
-      _categories.add(item.category);
-    }
-
     Set<String> uniqueNames = searchResults.map((item) => item.itemName).toSet();
     List<Item> distinctMedicines = uniqueNames.map((name) {
       return searchResults.firstWhere((item) => item.itemName == name);
@@ -108,8 +88,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
     return distinctMedicines.take(4).toList();
   }
-
-
 
 
   Future<void> _getMedSizesAndUnits(String medicineName) async {
@@ -335,229 +313,279 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     return Center(child: CircularProgressIndicator());
     } else {
     if (snapshot.hasData && snapshot.data != null) {
-    return Scaffold(
+    return GradientScaffold(
     appBar: Header(title: widget.businessName),
-    body: SingleChildScrollView(
-    padding: EdgeInsets.all(16.0),
-    child: CustomCard(
-    child: Padding(
-    padding: EdgeInsets.all(8.0),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      TypeAheadFormField<Item>(
-        textFieldConfiguration: TextFieldConfiguration(
-          controller: _fieldTextEditingController,
-          decoration: InputDecoration(hintText: 'Item Name'),
-        ),
-        suggestionsCallback: (pattern) async {
-          return await _searchMedicineName(pattern);
-        },
-        itemBuilder: (context, Item suggestion) {
-          return ListTile(
-            title: Text(suggestion.itemName),
-          );
-        },
-        suggestionsBoxDecoration: SuggestionsBoxDecoration(
-          hasScrollbar: true,
-        ),
-        onSuggestionSelected: (Item suggestion) {
-          setState(() {
-            _selectedMedicine = suggestion.itemName;
-            _fieldTextEditingController.text = suggestion.itemName;
-          });
-          _getMedSizesAndUnits(suggestion.itemName);
-        },
-      ),
-      DropdownButtonFormField<String>(
-        value: _selectedUnit,
-        items: _medicineUnits.map((String unit) {
-          return DropdownMenuItem<String>(
-            value: unit,
-            child: Text(unit),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _selectedUnit = newValue;
-          });
-        },
-        decoration: InputDecoration(
-          labelText: "Unit",
-          hintText: "Select Unit",
-        ),
-      ),
-
-      DropdownButtonFormField<double>(
-        decoration: InputDecoration(
-          labelText: 'Size',
-        ),
-        value: _selectedSize,
-        items: _medicineSizes.map((size) {
-          return DropdownMenuItem(
-            child: Text(size.toString()),
-            value: size,
-          );
-        }).toList(),
-        onChanged: (double? newValue) {
-          setState(() {
-            _selectedSize = newValue;
-          });
-          _updateDistributors();
-        },
-      ),
-      DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          labelText: 'Distributor',
-        ),
-        value: _selectedDistributor,
-        items: _distributors
-            .map((distributor) => DropdownMenuItem(child: Text(distributor), value: distributor))
-            .toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _selectedDistributor = newValue;
-          });
-          _updateCategories();
-        },
-      ),
-
-      DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          labelText: 'Category',
-        ),
-        value: _selectedCategory,
-        items: _categories
-            .map((category) => DropdownMenuItem(child: Text(category), value: category))
-            .toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _selectedCategory = newValue;
-          });
-          _updateAdditionalInfo();
-        },
-      ),
-      Column(
+    body: Column(
+      children: [
+        SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: CustomCard(
+        child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAdditionalInfoDropdown(),
-        ],
-      ),
-      TextFormField(
-        controller: _quantityController, // Added line
-        decoration: InputDecoration(
-          labelText: 'Quantity',
-        ),
-        keyboardType: TextInputType.number,
-      ),
+          TypeAheadFormField<Item>(
+            textFieldConfiguration: TextFieldConfiguration(
+              controller: _fieldTextEditingController,
+              decoration: InputDecoration(hintText: 'Item Name'),
+            ),
+            suggestionsCallback: (pattern) async {
+              return await _searchMedicineName(pattern);
+            },
+            itemBuilder: (context, Item suggestion) {
+              return ListTile(
+                title: Text(suggestion.itemName),
+              );
+            },
+            suggestionsBoxDecoration: SuggestionsBoxDecoration(
+              hasScrollbar: true,
+            ),
+            onSuggestionSelected: (Item suggestion) {
+              if (isNumeric(_fieldTextEditingController.text)) {
+                // If the input is numeric, we assume it's an ID and autofill all fields
+                setState(() {
+                  _selectedMedicine = suggestion.itemName;
+                  _selectedUnit = suggestion.unitOfMeasurement;
+                  _selectedSize = suggestion.size;
+                  _selectedDistributor = suggestion.distributorName;
+                  _selectedCategory = suggestion.category;
+                  _selectedAdditionalInfo = suggestion.additionalInfo.entries.map((e) => '${e.key}: ${e.value}').join(', ');
 
-      SizedBox(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          buildButton("+", Colors.green, () {
-            // Handle the "+" button press
-          }),
-          buildButton("-", Colors.red, () {
-            // Handle the "-" button press
-          }),
-        ],
-      ),
+                  _fieldTextEditingController.text = suggestion.itemName;
 
-      SizedBox(height: 16),
-      SizedBox(
-        width: double.infinity,
-        child: MyButton(
-          onPressed: () async {
-            int quantityDelta = int.parse(_quantityController.text);
-            final response = await updateItemQuantity(
-              business: widget.businessName,
-              distributorsName: _selectedDistributor ?? '',
-              category: _selectedCategory ?? '',
-              itemName: _selectedMedicine ?? '',
-              itemType: "Medicine",
-              size: (_selectedSize?.toInt() ?? 0),
-              uom: _selectedUnit ?? '',
-              quantityDelta: _selectedButton == "+" ? quantityDelta : -quantityDelta,
-              additionalInfo: _selectedAdditionalInfo != null
-                  ? parseAdditionalInfo(_selectedAdditionalInfo!)
-                  : {},
-            );
-            print(response.body);
-            if (response.statusCode == 200) {
-              Map<String, dynamic> responseBody = jsonDecode(response.body);
-              int? itemId = responseBody['item_id'];
+                  _medicineUnits = [suggestion.unitOfMeasurement];
+                  _medicineSizes = [suggestion.size];
+                  _distributors = [suggestion.distributorName];
+                  _categories = [suggestion.category];
+                });
+              } else {
+                _getMedSizesAndUnits(suggestion.itemName);
+                // If the input is not numeric, we assume it's a name and do not autofill the fields
+                // You can adjust this part according to your needs
+                setState(() {
+                  _selectedMedicine = suggestion.itemName;
+                  _fieldTextEditingController.text = suggestion.itemName;
+                  // Reset other fields as needed
+                  _selectedUnit = null;
+                  _selectedSize = null;
+                  _selectedDistributor = null;
+                  _selectedCategory = null;
+                  _selectedAdditionalInfo = null;
 
-              if (_selectedButton == "+") {
-                showDialog(
-                  context: context,
-                  builder: (context) => MyAlertDialog(
-                    title: responseBody['message'],
-                    content: 'Updated quantity is ${responseBody['updated_quantity']}',
-                    buttonText: 'OK',
-                    onButtonPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                );
+                  _medicineUnits = [];
+                  _medicineSizes = [];
+                  _distributors = [];
+                  _categories = [];
+                });
               }
-              else {
-                if (itemId != null) {
-                  void _addItemToCart(int itemId, int quantity) async {
-                    try {
-                      Map<String, dynamic> response = await addItemToCart(itemId: itemId, quantity: quantity);
-                      print('Response: $response');
+            },
 
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Item added to checkout'),
-                          content: Text('Add more items?'),
-                          actions: [
-                            Row(
-                              children: [
-                                MyButton(
-                                  text: 'Checkout',
-                                  onPressed: () {
-                                    // Close the dialog
-                                    Navigator.of(context).pop();
 
-                                    // Navigate to CheckoutWidget
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => CheckoutWidget(bname: widget.businessName)),
-                                    );
-                                  },
+          ),
+          DropdownButtonFormField<String>(
+            value: _selectedUnit,
+            items: _medicineUnits.map((String unit) {
+              return DropdownMenuItem<String>(
+                value: unit,
+                child: Text(unit),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedUnit = newValue;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: "Unit",
+              hintText: "Select Unit",
+            ),
+          ),
+
+          DropdownButtonFormField<double>(
+            decoration: InputDecoration(
+              labelText: 'Size',
+            ),
+            value: _selectedSize,
+            items: _medicineSizes.map((size) {
+              return DropdownMenuItem(
+                child: Text(size.toString()),
+                value: size,
+              );
+            }).toList(),
+            onChanged: (double? newValue) {
+              setState(() {
+                _selectedSize = newValue;
+              });
+              _updateDistributors();
+            },
+          ),
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Distributor',
+            ),
+            value: _selectedDistributor,
+            items: _distributors
+                .map((distributor) => DropdownMenuItem(child: Text(distributor), value: distributor))
+                .toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedDistributor = newValue;
+              });
+              _updateCategories();
+            },
+          ),
+
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Category',
+            ),
+            value: _selectedCategory,
+            items: _categories
+                .map((category) => DropdownMenuItem(child: Text(category), value: category))
+                .toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedCategory = newValue;
+              });
+              _updateAdditionalInfo();
+            },
+          ),
+          Column(
+            children: [
+              _buildAdditionalInfoDropdown(),
+            ],
+          ),
+          TextFormField(
+            controller: _quantityController, // Added line
+            decoration: InputDecoration(
+              labelText: 'Quantity',
+            ),
+            keyboardType: TextInputType.number,
+          ),
+
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildButton("+", Colors.green, () {
+                // Handle the "+" button press
+              }),
+              buildButton("-", Colors.red, () {
+                // Handle the "-" button press
+              }),
+            ],
+          ),
+
+          SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: MyButton(
+              onPressed: () async {
+                int quantityDelta = int.parse(_quantityController.text);
+                final response = await updateItemQuantity(
+                  business: widget.businessName,
+                  distributorsName: _selectedDistributor ?? '',
+                  category: _selectedCategory ?? '',
+                  itemName: _selectedMedicine ?? '',
+                  itemType: "Medicine",
+                  size: (_selectedSize?.toInt() ?? 0),
+                  uom: _selectedUnit ?? '',
+                  quantityDelta: _selectedButton == "+" ? quantityDelta : -quantityDelta,
+                  additionalInfo: _selectedAdditionalInfo != null
+                      ? parseAdditionalInfo(_selectedAdditionalInfo!)
+                      : {},
+                );
+                print(response.body);
+                if (response.statusCode == 200) {
+                  Map<String, dynamic> responseBody = jsonDecode(response.body);
+                  int? itemId = responseBody['item_id'];
+
+                  if (_selectedButton == "+") {
+                    showDialog(
+                      context: context,
+                      builder: (context) => MyAlertDialog(
+                        title: responseBody['message'],
+                        content: 'Updated quantity is ${responseBody['updated_quantity']}',
+                        buttonText: 'OK',
+                        onButtonPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    );
+                  }
+                  else {
+                    if (itemId != null) {
+                      void _addItemToCart(int itemId, int quantity) async {
+                        try {
+                          Map<String, dynamic> response = await addItemToCart(itemId: itemId, quantity: quantity);
+                          print('Response: $response');
+
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('Item added to checkout'),
+                              content: Text('Add more items?'),
+                              actions: [
+                                Row(
+                                  children: [
+                                    MyButton(
+                                      text: 'Checkout',
+                                      onPressed: () {
+                                        // Close the dialog
+                                        Navigator.of(context).pop();
+
+                                        // Navigate to CheckoutWidget
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => CheckoutWidget(bname: widget.businessName)),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(height: 5,),
+                                    MyButton(
+                                      text: 'Add More Items',
+                                      onPressed: () {
+                                        // Stay on dashboard and refresh it
+                                        Navigator.of(context).pop(); // Close the dialog
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => DashboardWidget(businessName: widget.businessName)),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 5,),
-                                MyButton(
-                                  text: 'Add More Items',
-                                  onPressed: () {
-                                    // Stay on dashboard and refresh it
-                                    Navigator.of(context).pop(); // Close the dialog
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => DashboardWidget(businessName: widget.businessName)),
-                                    );
-                                  },
-                                ),
+
                               ],
                             ),
-
-                          ],
+                          );
+                        } catch (e) {
+                          print('Error: $e');
+                        }
+                      }
+                      _addItemToCart(itemId, quantityDelta.abs());
+                    }
+                    else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => MyAlertDialog(
+                          title: 'Failed',
+                          content: 'QR code generation failed!}',
+                          buttonText: 'OK',
+                          onButtonPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
                       );
-                    } catch (e) {
-                      print('Error: $e');
                     }
                   }
-                  _addItemToCart(itemId, quantityDelta.abs());
-                }
-                else {
+                } else {
                   showDialog(
                     context: context,
                     builder: (context) => MyAlertDialog(
                       title: 'Failed',
-                      content: 'QR code generation failed!}',
+                      content: 'Item Quantity is not present!',
                       buttonText: 'OK',
                       onButtonPressed: () {
                         Navigator.of(context).pop();
@@ -565,32 +593,20 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                     ),
                   );
                 }
-              }
-            } else {
-              showDialog(
-                context: context,
-                builder: (context) => MyAlertDialog(
-                  title: 'Failed',
-                  content: 'Item Quantity is not present!',
-                  buttonText: 'OK',
-                  onButtonPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              );
-            }
-          },
-          text: 'PROCEED',
+              },
+              text: 'PROCEED',
+            ),
+
+
+          ),
+
+          SizedBox(height: 16),
+        ],
         ),
-
-
-      ),
-
-      SizedBox(height: 16),
-    ],
-    ),
-    ),
-    ),
+        ),
+        ),
+        ),
+      ],
     ),
       bottomNavigationBar: Footer(
         currentIndex: _currentIndex,

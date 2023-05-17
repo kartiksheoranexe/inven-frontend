@@ -5,6 +5,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/businesstypes/medicine/businessdetails.dart';
 import 'package:inven/screens/businesstypes/medicine/supplierdetails.dart';
 import 'package:inven/screens/businesstypes/medicine/medicinedetails.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class BusinessWidget extends StatefulWidget {
   const BusinessWidget({Key? key}) : super(key: key);
@@ -24,13 +25,13 @@ class _BusinessWidgetState extends State<BusinessWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTile(context, 'BUSINESS', Colors.blueGrey, () {
+              _buildTile(context, 'BUSINESS', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -38,7 +39,7 @@ class _BusinessWidgetState extends State<BusinessWidget> {
                   ),
                 );
               }),
-              _buildTile(context, 'SUPPLIER', Colors.blueGrey, () {
+              _buildTile(context, 'SUPPLIER', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -60,7 +61,7 @@ class _BusinessWidgetState extends State<BusinessWidget> {
                 );
               }),
                 _buildTile(context, 'ITEM',
-                    Colors.blueGrey, () {
+                    Colors.blueGrey.shade800, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

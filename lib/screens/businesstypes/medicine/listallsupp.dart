@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/code/listallsuppliers.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class CategoryListWidget extends StatefulWidget {
   final List<String> businessNames;
@@ -38,9 +39,8 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
+    return GradientScaffold(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

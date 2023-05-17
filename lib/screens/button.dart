@@ -10,7 +10,7 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.blueGrey.shade800,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),

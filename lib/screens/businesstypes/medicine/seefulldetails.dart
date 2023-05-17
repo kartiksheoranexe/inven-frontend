@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class DataDisplayWidget extends StatelessWidget {
   final String? category;
@@ -26,7 +27,7 @@ class DataDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       // appBar: Header(),
       body: Center(
         child: Container(

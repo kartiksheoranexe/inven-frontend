@@ -6,6 +6,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/footer.dart';
 import 'package:inven/screens/header.dart';
 import 'package:inven/screens/businesstypes/medicine/searchresult.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class SearchWidget extends StatefulWidget {
   final String businessName;
@@ -114,91 +115,95 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: Header(title: widget.businessName),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: CustomCard(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Autocomplete<Item>(
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (textEditingValue == '') {
-                      return const Iterable<Item>.empty();
-                    }
-                    return _searchMedicineName(textEditingValue.text);
-                  },
-                  displayStringForOption: (Item option) => option.itemName,
-                  onSelected: (Item selection) async {
-                    setState(() {
-                      _selectedMedicine = selection.itemName;
-                      _medicineNameController.text = selection.itemName;
-                    });
-                    await _fetchDistributorOptions();
-                  },
-                  fieldViewBuilder: (BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode fieldFocusNode,
-                      VoidCallback onFieldSubmitted) {
-                    _medicineNameController.addListener(() {
-                      fieldTextEditingController.text = _medicineNameController.text;
-                    });
-                    return TextFormField(
-                      controller: _medicineNameController,
-                      focusNode: fieldFocusNode,
-                      decoration: InputDecoration(hintText: 'Item'),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedMedicine = value;
-                        });
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: CustomCard(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Autocomplete<Item>(
+                      optionsBuilder: (TextEditingValue textEditingValue) {
+                        if (textEditingValue == '') {
+                          return const Iterable<Item>.empty();
+                        }
+                        return _searchMedicineName(textEditingValue.text);
                       },
-                    );
-                  },
+                      displayStringForOption: (Item option) => option.itemName,
+                      onSelected: (Item selection) async {
+                        setState(() {
+                          _selectedMedicine = selection.itemName;
+                          _medicineNameController.text = selection.itemName;
+                        });
+                        await _fetchDistributorOptions();
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode fieldFocusNode,
+                          VoidCallback onFieldSubmitted) {
+                        _medicineNameController.addListener(() {
+                          fieldTextEditingController.text = _medicineNameController.text;
+                        });
+                        return TextFormField(
+                          controller: _medicineNameController,
+                          focusNode: fieldFocusNode,
+                          decoration: InputDecoration(hintText: 'Item'),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedMedicine = value;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      value: _selectedDistributor,
+                      hint: Text('Distributor'),
+                      onChanged: (String? value) {
+                        _onDistributorChanged(value!);
+                        _fetchCategoryOptions();
+                      },
+                      items: _distributorOptions.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      value: _selectedCategory,
+                      hint: Text('Category'),
+                      onChanged: (String? value) {
+                        _onCategoryChanged(value!);
+                      },
+                      items: _categoryOptions.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: MyButton(
+                        onPressed: _onSearchPressed,
+                        text: 'SEARCH',
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: _selectedDistributor,
-                  hint: Text('Distributor'),
-                  onChanged: (String? value) {
-                    _onDistributorChanged(value!);
-                    _fetchCategoryOptions();
-                  },
-                  items: _distributorOptions.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: _selectedCategory,
-                  hint: Text('Category'),
-                  onChanged: (String? value) {
-                    _onCategoryChanged(value!);
-                  },
-                  items: _categoryOptions.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: MyButton(
-                    onPressed: _onSearchPressed,
-                    text: 'SEARCH',
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: Footer(
       currentIndex: _currentIndex,

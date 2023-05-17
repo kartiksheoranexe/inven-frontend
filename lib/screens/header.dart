@@ -9,7 +9,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.shopping_cart),
+        icon: Icon(Icons.shopping_cart,
+        color: Colors.blueGrey.shade800,),
         onPressed: () {
           Navigator.push(
             context,
@@ -28,7 +29,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
           Text(
             title,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.blueGrey.shade800,
               fontSize: 24,
               fontFamily: 'Sans Serif',
             ),
@@ -43,7 +44,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
             child: Text(
               'INVEN©',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.blueGrey.shade800,
                 fontSize: 15,
                 fontFamily: 'Sans Serif',
               ),
@@ -56,7 +57,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
           bottom: Radius.circular(30),
         ),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       elevation: 0,
     );
   }

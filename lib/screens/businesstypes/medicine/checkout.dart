@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import '../../../code/barcodeapi.dart';
 import '../../../code/deletecartitemapi.dart';
 import '../../../code/getcartitems.dart';
@@ -85,59 +86,63 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                final item = cartItems[index];
-                return CustomCard(
+    return GradientScaffold(
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: cartItems.length,
+                  itemBuilder: (context, index) {
+                    final item = cartItems[index];
+                    return CustomCard(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Item: ${item['item']}'),
+                          Text('Size: ${item['size']}'),
+                          Text('Unit Sold: ${item['unit']}'),
+                          Text('Price: ${item['total_price']}'),
+                          IconButton(
+                            icon: Icon(Icons.remove, size: 24),
+                            onPressed: () {
+                              handleCartItemDeletion(item['cart_item_id']);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                CustomCard(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Item: ${item['item']}'),
-                      Text('Size: ${item['size']}'),
-                      Text('Unit Sold: ${item['unit']}'),
-                      Text('Price: ${item['total_price']}'),
-                      IconButton(
-                        icon: Icon(Icons.remove, size: 24),
-                        onPressed: () {
-                          handleCartItemDeletion(item['cart_item_id']);
+                      Text('Total: $totalPrice', style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 16),
+                      TextField(
+                        decoration: InputDecoration(labelText: 'Discount (%)'),
+                        onChanged: (value) {
+                          setState(() {
+                            discount = double.tryParse(value) ?? 0;
+                          });
                         },
                       ),
+                      SizedBox(height: 16),
+                      Text('Final Payment: ${totalPrice * (1 - discount / 100)}', style: TextStyle(fontSize: 18)),
                     ],
                   ),
-                );
-              },
+                ),
+                MyButton(
+                  text: 'PAYMENT',
+                  onPressed: handlePayment,
+                ),
+              ],
             ),
-            CustomCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Total: $totalPrice', style: TextStyle(fontSize: 18)),
-                  SizedBox(height: 16),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Discount (%)'),
-                    onChanged: (value) {
-                      setState(() {
-                        discount = double.tryParse(value) ?? 0;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 16),
-                  Text('Final Payment: ${totalPrice * (1 - discount / 100)}', style: TextStyle(fontSize: 18)),
-                ],
-              ),
-            ),
-            MyButton(
-              text: 'PAYMENT',
-              onPressed: handlePayment,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

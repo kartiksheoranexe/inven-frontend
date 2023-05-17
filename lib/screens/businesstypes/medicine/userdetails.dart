@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/businesstypes/medicine/businessdetails.dart';
 import 'package:inven/screens/businesstypes/medicine/registerupi.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 
 class UserWidget extends StatefulWidget {
@@ -22,13 +23,13 @@ class _UserWidgetState extends State<UserWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTile(context, 'UPI REGISTER', Colors.blueGrey, () {
+              _buildTile(context, 'UPI REGISTER', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -36,7 +37,7 @@ class _UserWidgetState extends State<UserWidget> {
                   ),
                 );
               }),
-              _buildTile(context, 'USER DETAILS', Colors.blueGrey, () {
+              _buildTile(context, 'USER DETAILS', Colors.blueGrey.shade800, () {
 
               }),
             ],

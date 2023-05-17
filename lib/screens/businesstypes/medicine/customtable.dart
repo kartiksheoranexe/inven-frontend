@@ -16,7 +16,7 @@ class CustomTable extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.blueGrey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
             offset: Offset(0, 3),
@@ -27,7 +27,7 @@ class CustomTable extends StatelessWidget {
         scrollDirection: Axis.vertical,
       child: Table(
           border: TableBorder.all(
-            color: Colors.grey.shade400,
+            color: Colors.blueGrey.shade500,
             width: 1,
           ),
           columnWidths: const {
@@ -40,7 +40,7 @@ class CustomTable extends StatelessWidget {
           children: [
             TableRow(
               decoration: BoxDecoration(
-                color: Colors.grey.shade500,
+                color: Colors.blueGrey.shade800,
               ),
               children: [
                 TableCell(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inven/screens/welcome.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/customcard.dart';
@@ -147,14 +148,14 @@ class _ListBusinessWidgetState extends State<ListBusinessWidget> {
     return Center(child: CircularProgressIndicator());
     } else {
     if (snapshot.hasData && snapshot.data != null) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
         title: Text(
           'Hi ${widget.username}!',
           style: TextStyle(
             fontFamily: 'SansSerif',
             fontSize: 30,
-            color: Colors.black,
+            color: Colors.blueGrey.shade800,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -236,7 +237,7 @@ class _ListBusinessWidgetState extends State<ListBusinessWidget> {
                           crossAxisCount: 2,
                           children: [
                             _buildTile(context, 'SALES',
-                                Colors.blueGrey, () {
+                                Colors.blueGrey.shade800, () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -245,7 +246,7 @@ class _ListBusinessWidgetState extends State<ListBusinessWidget> {
                                     ),
                                   );
                                 }),
-                            _AlertbuildTile(context, 'ALERT', Colors.blueGrey, () {
+                            _AlertbuildTile(context, 'ALERT', Colors.blueGrey.shade800, () {
                               void _showBusinessListDialog() async {
                                 String? selectedBusinessName = await showDialog<String>(
                                   context: context,
@@ -264,7 +265,7 @@ class _ListBusinessWidgetState extends State<ListBusinessWidget> {
                               _showBusinessListDialog();
                             }),
                             _buildTile(context, 'BUSINESS',
-                                Colors.blueGrey, () {
+                                Colors.blueGrey.shade800, () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -274,7 +275,7 @@ class _ListBusinessWidgetState extends State<ListBusinessWidget> {
                                   );
                                 }),
                             _buildTile(context, 'USER',
-                                Colors.blueGrey, () {
+                                Colors.blueGrey.shade800, () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

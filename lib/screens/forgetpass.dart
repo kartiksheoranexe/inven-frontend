@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/verifyotp.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import '../code/passresetrequestapi.dart';
 import 'button.dart';
 import 'customcard.dart';
+import 'mydiologbox.dart';
 
 class ForgetPasswordWidget extends StatefulWidget {
   @override
@@ -12,10 +14,48 @@ class ForgetPasswordWidget extends StatefulWidget {
 class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
+  bool _isLoading = false;
+
+  void _handleOtpRequest() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final response = await requestPasswordReset(_email);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (response.statusCode == 201) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => VerifyOtp(email: _email)),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return MyAlertDialog(
+            title: 'Error',
+            content: 'User not found',
+            buttonText: 'Try Again',
+            onButtonPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Padding(
@@ -36,19 +76,11 @@ class _ForgetPasswordWidgetState extends State<ForgetPasswordWidget> {
                     onChanged: (value) => _email = value,
                   ),
                   SizedBox(height: 24),
-                  MyButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        // Call API to send OTP to the entered email
-                        final response = await requestPasswordReset(_email);
-                        // Navigate to VerifyOtp widget
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => VerifyOtp(email: _email)),
-                        );
-                      }
-                    },
-                    text: 'Get OTP',
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : MyButton(
+                    onPressed: _handleOtpRequest,
+                    text: 'GET OTP',
                   )
                 ],
               ),

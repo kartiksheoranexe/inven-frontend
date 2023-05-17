@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'additem.dart';
 
 class ItemDetailsWidget extends StatefulWidget {
@@ -22,14 +23,14 @@ class _ItemDetailsWidgetState extends State<ItemDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTile(context, 'ADD A NEW ITEM',
-                  Colors.blueGrey, () {
+                  Colors.blueGrey.shade800, () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

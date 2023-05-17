@@ -4,6 +4,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/code/itemsoldbydateapi.dart';
 import 'package:inven/models/transactionmodel.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class ShowTransactionWidget extends StatefulWidget {
   final List<String> businessNames;
@@ -119,9 +120,8 @@ class _ShowTransactionWidgetState extends State<ShowTransactionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
+    return GradientScaffold(
+      body: Center(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/welcome.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 import '../code/verifyotpapi.dart';
 import 'mydiologbox.dart';
@@ -19,10 +20,56 @@ class VerifyOtp extends StatefulWidget {
 
 class _VerifyOtpState extends State<VerifyOtp> {
   List<TextEditingController> _otpControllers = List.generate(6, (index) => TextEditingController());
+  bool _isLoading = false;
+
+  void _handleOtpVerification() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String combinedOtp = _otpControllers.map((controller) => controller.text).join('');
+    bool isOtpVerified = await verifyOtp(identifier: widget.email, otp: combinedOtp);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (isOtpVerified) {
+      showDialog(
+        context: context,
+        builder: (context) => MyAlertDialog(
+          title: 'OTP Verified!',
+          content: 'Click on New Password',
+          buttonText: 'NEW PASSWORD',
+          onButtonPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NewPasswordWidget(email: widget.email, otp: combinedOtp)),
+            );
+          },
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => MyAlertDialog(
+          title: 'OTP Verification failed',
+          content: 'OTP didn\'t match!',
+          buttonText: 'OKAY',
+          onButtonPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+                  (Route<dynamic> route) => false,
+            );
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
@@ -37,53 +84,12 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     .toList(),
               ),
               SizedBox(height: 24),
-              MyButton(
-                onPressed: () async {
-                  // Combine the OTP digits from the individual controllers
-                  String combinedOtp = _otpControllers.map((controller) => controller.text).join('');
-
-                  // Call the verifyOtp function with the email from the widget and combined OTP
-                  bool isOtpVerified = await verifyOtp(identifier: widget.email, otp: combinedOtp);
-
-                  if (isOtpVerified) {
-                    // Show a dialog indicating that the OTP is verified
-                    showDialog(
-                      context: context,
-                      builder: (context) => MyAlertDialog(
-                        title: 'OTP Verified!',
-                        content: 'Click on New Password',
-                        buttonText: 'NEW PASSWORD',
-                        onButtonPressed: () {
-                          // Navigate to the NewPassword widget (you'll need to create this)
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => NewPasswordWidget(email: widget.email, otp: combinedOtp)),
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    // Show a dialog indicating that the OTP verification failed
-                    showDialog(
-                      context: context,
-                      builder: (context) => MyAlertDialog(
-                        title: 'OTP Verification failed',
-                        content: 'OTP didn\'t match!',
-                        buttonText: 'OKAY',
-                        onButtonPressed: () {
-                          // Navigate back to MyHomePage() widget
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyHomePage()),
-                                (Route<dynamic> route) => false,
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
-                text: 'Verify',
-              )
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : MyButton(
+                onPressed: _handleOtpVerification,
+                text: 'VERIFY',
+              ),
             ],
           ),
         ),

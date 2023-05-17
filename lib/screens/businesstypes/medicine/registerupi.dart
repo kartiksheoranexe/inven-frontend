@@ -3,6 +3,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/mydiologbox.dart';
 import 'package:inven/code/registerupiapi.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 import '../../../code/deleteupiapi.dart';
 import '../../../code/showupidetailsapi.dart';
@@ -20,31 +21,36 @@ class _RegisterUpiWidgetState extends State<RegisterUpiWidget> {
   String _url = '';
 
   List<dynamic> upiDetails = [];
+  bool _isLoading = false;
 
   void fetchUpiDetails() async {
     try {
       List<dynamic> details = await getUpiDetails();
       setState(() {
         upiDetails = details;
+        _isLoading = false; // Done loading
       });
     } catch (e) {
+      setState(() {
+        _isLoading = false; // Done loading
+      });
       print('Error: $e');
     }
   }
 
-
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     fetchUpiDetails(); // Fetch the UPI details when the widget is initialized
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return GradientScaffold(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Center(
         child: Column(
           children: [
             CustomCard(
@@ -87,6 +93,9 @@ class _RegisterUpiWidgetState extends State<RegisterUpiWidget> {
                       MyButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true; // Start loading
+                            });
                             try {
                               final response = await registerUpi(
                                 payeeVpa: _payeeVpa,
@@ -126,9 +135,12 @@ class _RegisterUpiWidgetState extends State<RegisterUpiWidget> {
                             } catch (e) {
                               // Handle API call error
                             }
+                            setState(() {
+                              _isLoading = false; // Done loading
+                            });
                           }
                         },
-                        text: 'REGISTER',
+                        text: _isLoading ? 'Loading...' : 'REGISTER',
                       ),
                     ],
                   ),
@@ -158,8 +170,11 @@ class _RegisterUpiWidgetState extends State<RegisterUpiWidget> {
                   Text('URL: ${upiDetails[0]['url']}', style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(height: 16),
                   MyButton(
-                    text: 'DELETE',
+                      text: _isLoading ? 'Loading...' : 'DELETE',
                     onPressed: () async {
+                      setState(() {
+                        _isLoading = true; // Start loading
+                      });
                       try {
                         await deleteUpiDetails(upiDetails[0]['payee_vpa']);
                         // Call a function to refresh the UPI details shown on the screen
@@ -168,6 +183,9 @@ class _RegisterUpiWidgetState extends State<RegisterUpiWidget> {
                         print('Error: $e');
                         // Optionally, you can show a dialog or a Snackbar with an error message
                       }
+                      setState(() {
+                        _isLoading = false; // Done loading
+                      });
                     },
                   ),
                 ],

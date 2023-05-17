@@ -47,7 +47,7 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.blueGrey.shade500,
       fixedColor: Colors.grey.shade400,
       currentIndex: currentIndex,
       unselectedItemColor: Colors.white,

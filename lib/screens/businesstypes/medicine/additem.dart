@@ -3,6 +3,7 @@ import 'package:inven/code/additemapi.dart';
 import 'package:inven/screens/button.dart';
 import 'package:inven/screens/customcard.dart';
 import 'package:inven/screens/mydiologbox.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class AddItemForm extends StatefulWidget {
   final List<String> businessNames;
@@ -136,117 +137,119 @@ class _AddItemFormState extends State<AddItemForm> {
         sizeController.text.isNotEmpty &&
         quantityController.text.isNotEmpty;
 
-    return Center(
-      child: Container(
-        color: Colors.white,
-        child: CustomCard(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Business Name'),
-                  value: selectedBusinessName,
-                  items: widget.businessNames
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedBusinessName = newValue;
-                    });
-                  },
-                ),
-                TextField(
-                  controller: medicineNameController,
-                  decoration: InputDecoration(labelText: 'Item Name'),
-                ),
-                TextField(
-                  controller: categoryController,
-                  decoration: InputDecoration(labelText: 'Category'),
-                ),
-                TextField(
-                  controller: distributorController,
-                  decoration: InputDecoration(labelText: 'Distributor Name'),
-                ),
-                TextField(
-                  controller: sizeController,
-                  decoration: InputDecoration(labelText: 'Size'),
-                ),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Unit of Measurement'),
-                  value: selectedUnitOfMeasurement,
-                  items: ['gm', 'kg', 'l', 'ml']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedUnitOfMeasurement = newValue;
-                    });
-                  },
-                ),
-                TextField(
-                  controller: quantityController,
-                  decoration: InputDecoration(labelText: 'Quantity'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: alertquantityController,
-                  decoration: InputDecoration(labelText: 'Alert Quantity'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: priceController,
-                  decoration: InputDecoration(labelText: 'Price'),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10),
-                Column(
-                  children: [
-                    Text(
-                      'Additional Info',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 200),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: _buildAdditionalInfoFields(),
+    return GradientScaffold(
+      body: Center(
+        child: Container(
+          color: Colors.white,
+          child: CustomCard(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'Business Name'),
+                    value: selectedBusinessName,
+                    items: widget.businessNames
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedBusinessName = newValue;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: medicineNameController,
+                    decoration: InputDecoration(labelText: 'Item Name'),
+                  ),
+                  TextField(
+                    controller: categoryController,
+                    decoration: InputDecoration(labelText: 'Category'),
+                  ),
+                  TextField(
+                    controller: distributorController,
+                    decoration: InputDecoration(labelText: 'Distributor Name'),
+                  ),
+                  TextField(
+                    controller: sizeController,
+                    decoration: InputDecoration(labelText: 'Size'),
+                  ),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'Unit of Measurement'),
+                    value: selectedUnitOfMeasurement,
+                    items: ['gm', 'kg', 'l', 'ml']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedUnitOfMeasurement = newValue;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: quantityController,
+                    decoration: InputDecoration(labelText: 'Quantity'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextField(
+                    controller: alertquantityController,
+                    decoration: InputDecoration(labelText: 'Alert Quantity'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextField(
+                    controller: priceController,
+                    decoration: InputDecoration(labelText: 'Price'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      Text(
+                        'Additional Info',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: 200),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: _buildAdditionalInfoFields(),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    setState(() {
-                      _additionalInfoFields.add(MapEntry('', ''));
-                    });
-                  },
-                ),
-                SizedBox(height: 20),
-                MyButton(
-                  text: 'Add',
-                  onPressed: isButtonEnabled ? _submitForm : () {},
-                ),
-              ],
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    onPressed: () {
+                      setState(() {
+                        _additionalInfoFields.add(MapEntry('', ''));
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  MyButton(
+                    text: 'Add',
+                    onPressed: isButtonEnabled ? _submitForm : () {},
+                  ),
+                ],
+              ),
             ),
           ),
+      ),
         ),
-    ),
       ),
     );
   }

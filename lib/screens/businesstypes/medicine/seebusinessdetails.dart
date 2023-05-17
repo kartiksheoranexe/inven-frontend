@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inven/models/businessmodel.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class BusinessDetailWidget extends StatelessWidget {
   final List<Business> businesses;
@@ -10,7 +11,7 @@ class BusinessDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       // backgroundColor: Colors.white,
       body: Center(
         child: CustomCard(

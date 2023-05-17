@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inven/screens/customcard.dart';
+import 'package:inven/screens/widgetbackground.dart';
 import 'supplier.dart';
 import 'listallsupp.dart';
 import 'package:inven/code/listallsuppliers.dart';
@@ -24,14 +25,14 @@ class _SupplierDetailsWidgetState extends State<SupplierDetailsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTile(context, 'EDIT SUPPLIER',
-                  Colors.blueGrey, () {
+                  Colors.blueGrey.shade800, () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -40,7 +41,7 @@ class _SupplierDetailsWidgetState extends State<SupplierDetailsWidget> {
                     );
                   }),
               _buildTile(context, 'LIST ALL SUPPLIER',
-                  Colors.blueGrey, () {
+                  Colors.blueGrey.shade800, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -5,6 +5,7 @@ import 'package:inven/screens/register.dart';
 import 'package:inven/screens/listofbusiness.dart';
 import 'package:inven/code/loginapi.dart';
 import 'package:inven/code/getbusinessapi.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 import 'forgetpass.dart';
 
@@ -16,8 +17,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
     final responseReceiver = ResponseReceiverlogin();
 
     final authToken = await login(
@@ -25,6 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
       password: _passwordController.text,
       responseReceiver: responseReceiver,
     );
+
+    setState(() {
+      _isLoading = false;
+    });
 
     if (authToken != null) {
       final businesses = await getBusinessList();
@@ -45,8 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return GradientScaffold(
       body: Center(
       child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -60,8 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
       'INVEN©',
       style: TextStyle(
         fontSize: 35,
-        color: Colors.black,
+        color: Colors.blueGrey.shade800,
         fontFamily: 'Sans Serif',
+        fontWeight: FontWeight.bold,
       ),
     ),
     SizedBox(height: 30),
@@ -87,9 +96,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 obscureText: true,
               ),
               SizedBox(height: 20),
-              MyButton(
-                text: 'LOGIN',
-                onPressed: _login,
+              Stack(
+                children: [
+                  MyButton(
+                  text: 'LOGIN',
+                    onPressed: _isLoading ? () {} : _login,
+                ),
+                  if (_isLoading)
+                    const CircularProgressIndicator(),
+                ],
               ),
               SizedBox(height: 20),
               Row(

@@ -4,6 +4,7 @@ import 'package:inven/screens/customcard.dart';
 import 'package:inven/code/businessdetailapi.dart';
 import 'package:inven/models/businessmodel.dart';
 import 'package:inven/screens/businesstypes/medicine/showtransactions.dart';
+import 'package:inven/screens/widgetbackground.dart';
 
 class SalesWidget extends StatefulWidget {
   const SalesWidget({Key? key}) : super(key: key);
@@ -23,13 +24,13 @@ class _SalesWidgetState extends State<SalesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       body: Center(
         child: CustomCard(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTile(context, 'SALES', Colors.blueGrey, () {
+              _buildTile(context, 'SALES', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -50,7 +51,7 @@ class _SalesWidgetState extends State<SalesWidget> {
                   ),
                 );
               }),
-              _buildTile(context, 'TRANSACTIONS', Colors.blueGrey, () {
+              _buildTile(context, 'TRANSACTIONS', Colors.blueGrey.shade800, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -71,7 +72,7 @@ class _SalesWidgetState extends State<SalesWidget> {
                   ),
                 );
               }),
-              _buildTile(context, 'PLACE ORDER', Colors.blueGrey, () {
+              _buildTile(context, 'PLACE ORDER', Colors.blueGrey.shade800, () {
 
               }),
             ],
